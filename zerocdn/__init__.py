@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from json import JSONDecodeError
 from typing import BinaryIO
 from urllib.parse import urlencode
@@ -11,11 +13,11 @@ class ZeroCDN:
         self.api_key = api_key
         self.zone = f'{zone}.' if zone else ''
 
-    def request(self,
-                path: str,
-                data=None,
-                files=None,
-                method: str = 'POST') -> dict[str, int | str] | str:
+    def _request(self,
+                 path: str,
+                 data=None,
+                 files=None,
+                 method: str = 'POST') -> dict[str, int | str] | str:
 
         if files is None:
             files = {}
@@ -46,57 +48,46 @@ class ZeroCDN:
 
     def upload(self, file: BinaryIO, **params: dict[str]):
         params = self._params(**params)
-        print(file)
-        return self.request(
-            'files.json',
-            params, files=file
-        )
+        return self._request('files.json', params, files=file)
 
     def upload_from_url(self, url, **params):
         params = self._params(**params)
 
-        return self.request(
-            'files.json',
-            {'url': url} | params,
-        )
+        return self._request('files.json', {'url': url} | params)
 
     def files(self, in_folder: int | str = ''):
-        return self.request('files.json', {'folder': in_folder}, method='GET')
+        return self._request('files.json', {'folder': in_folder}, method='GET')
 
     def file(self, file_id: int | str):
-        return self.request(f'files/{file_id}.json', method='GET')
+        return self._request(f'files/{file_id}.json', method='GET')
 
     def delete_file(self, file_id: int | str):
-        return self.request(f'files/{file_id}.json', method='DELETE')
+        return self._request(f'files/{file_id}.json', method='DELETE')
 
     def rename_file(self, file_id: int | str, new_name: str):
-        return self.request(f'files/{file_id}.json', {
+        return self._request(f'files/{file_id}.json', {
             'name': new_name
         }, method='PATCH')
 
     def change_file(self, file_id: int | str, **params: dict[str]):
-        return self.request(
-            f'files/{file_id}.json',
-            params,
-            method='PATCH'
-        )
+        return self._request(f'files/{file_id}.json', params, method='PATCH')
 
     # Работа с папками
 
     def create_folder(self, folder_name: str, in_folder: int | str = ''):
-        return self.request('folders.json', {'name': folder_name,
-                                             'folder': in_folder})
+        return self._request('folders.json', {'name': folder_name,
+                                              'folder': in_folder})
 
     def folders(self, in_folder: int | str = ''):
-        return self.request('folders.json', {'folder': in_folder}, method='GET')
+        return self._request('folders.json', {'folder': in_folder}, method='GET')
 
     def folder(self, folder_id: int | str):
-        return self.request(f'folders/{folder_id}.json', method='GET')
+        return self._request(f'folders/{folder_id}.json', method='GET')
 
     def delete_folder(self, folder_id: int | str):
-        return self.request(f'folders/{folder_id}.json', method='DELETE')
+        return self._request(f'folders/{folder_id}.json', method='DELETE')
 
     def rename_folder(self, folder_id: int | str, new_name: str):
-        return self.request(f'folders/{folder_id}.json', {
+        return self._request(f'folders/{folder_id}.json', {
             'name': new_name
         }, method='PATCH')
