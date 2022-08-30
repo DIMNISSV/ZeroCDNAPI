@@ -6,7 +6,7 @@ with open('requirements.txt', encoding='UTF-8') as requirements:
     install_requires = requirements.read()
 setup(
     name='ZeroCDN',
-    version='1.0.0',
+    version='1.0.6',
     long_description=long_description,
     author='dimnissv',
     python_requires='>=3.8',
