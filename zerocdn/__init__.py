@@ -8,10 +8,13 @@ import requests
 
 
 class ZeroCDN:
-    def __init__(self, auth: tuple[str, str], api_key: str, zone: str = None):
+    __slots__ = ('auth', 'api_key', 'zone')
+
+    def __init__(self, auth: tuple[str, str], api_key: str, zone: str = ''):
         self.auth = auth
         self.api_key = api_key
-        self.zone = f'{zone}.' if zone else ''
+        zone += '.' if zone else ''
+        self.zone = zone
 
     def _request(self,
                  path: str,
@@ -19,10 +22,8 @@ class ZeroCDN:
                  files=None,
                  method: str = 'POST') -> dict[str, int | str] | str:
 
-        if files is None:
-            files = {}
-        if data is None:
-            data = {}
+        files = files if files else {}
+        data = data if data else {}
 
         url = f'https://{self.zone}mng.zerocdn.com/api/v2/users/{path}'
         if method == 'POST':
@@ -46,9 +47,11 @@ class ZeroCDN:
         params.setdefault('areas', ['msk.ru', 'minsk2.by'])
         return params
 
-    def upload(self, file: BinaryIO, **params: dict[str]):
+    def upload(self, file: BinaryIO | str, **params: dict[str]):
         params = self._params(**params)
-        return self._request('files.json', params, files=file)
+        if isinstance(file, str):
+            file = open(file, 'rb')
+        return self._request('files.json', params, files={'file': file})
 
     def upload_from_url(self, url, **params):
         params = self._params(**params)
