@@ -1,4 +1,5 @@
 # ZeroCDNAPI
+API for [ZeroCDN](https://zerocdn.com/api)
 
 # Installation
 You can
@@ -6,10 +7,10 @@ You can
 
 # Using
 
-```from zerocdn import ZeroCDN
-zcdn = ZeroCDN((name, pswd))```
-
-API for [ZeroCDN](https://zerocdn.com/api)
+```python
+from zerocdn import ZeroCDN
+zcdn = ZeroCDN((name, pswd))
+```
 
 ```python
 class ZeroCDN:
