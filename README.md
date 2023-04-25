@@ -6,6 +6,9 @@ You can
 
 # Using
 
+```from zerocdn import ZeroCDN
+zcdn = ZeroCDN((name, pswd))```
+
 API for [ZeroCDN](https://zerocdn.com/api)
 
 ```python
