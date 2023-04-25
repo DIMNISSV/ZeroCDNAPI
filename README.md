@@ -1,5 +1,11 @@
 # ZeroCDNAPI
 
+# Installation
+You can
+`git clone https://github.com/DIMNISSV/ZeroCDNAPI/`
+
+# Using
+
 API for [ZeroCDN](https://zerocdn.com/api)
 
 ```python
